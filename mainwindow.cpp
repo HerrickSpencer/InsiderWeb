@@ -62,7 +62,7 @@ void MainWindow::unsupportedContent(QNetworkReply * reply){
 bool MainWindow::isIsoUrl(QUrl url)
 {
     QString urlStr = url.toString();
-    if (urlStr.contains(".iso", Qt::CaseInsensitive));
+    if (urlStr.contains(".iso", Qt::CaseInsensitive))
     {
         return true;
     }
