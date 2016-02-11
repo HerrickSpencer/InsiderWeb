@@ -2,6 +2,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QProcess>
+#include <QDebug>
+#include <QRegExp>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -60,8 +62,7 @@ void MainWindow::unsupportedContent(QNetworkReply * reply){
 bool MainWindow::isIsoUrl(QUrl url)
 {
     QString urlStr = url.toString();
-    QRegularExpression re("\\.iso", QRegularExpression::CaseInsensitiveOption);
-    if (urlStr.contains(re))
+    if (urlStr.contains(".iso", Qt::CaseInsensitive));
     {
         return true;
     }
