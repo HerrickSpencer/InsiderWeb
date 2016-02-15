@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/root">
+        <file>images/Windows_IoT.png</file>
+        <file>images/Windows_IoT_Insider.png</file>
+    </qresource>
+</RCC>

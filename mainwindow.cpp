@@ -5,6 +5,8 @@
 #include <QDebug>
 #include <QRegExp>
 
+static QString ISO_TARGET_PATH = "/home/herricks/Temp/Wow.iso";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -14,8 +16,8 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(ui->webView->page(),SIGNAL(downloadRequested(QNetworkRequest)),this,SLOT(download(QNetworkRequest)));
     connect(ui->webView->page(),SIGNAL(unsupportedContent(QNetworkReply*)),this,SLOT(unsupportedContent(QNetworkReply*)));
 
-    //ui->webView->load(QUrl("https://auth.windowsondevices.com"));
-    ui->webView->load(QUrl("https://insider.windows.com"));
+    ui->webView->load(QUrl("https://auth.windowsondevices.com"));
+    //ui->webView->load(QUrl("https://insider.windows.com"));
     connect( ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UrlChanged()));
 }
 
@@ -62,7 +64,7 @@ void MainWindow::unsupportedContent(QNetworkReply * reply){
 bool MainWindow::isIsoUrl(QUrl url)
 {
     QString urlStr = url.toString();
-    if (urlStr.contains(".iso", Qt::CaseInsensitive));
+    if (urlStr.contains(".iso", Qt::CaseInsensitive))
     {
         return true;
     }
@@ -77,14 +79,25 @@ bool MainWindow::DownloadIso(QUrl url){
     qDebug()<<"To download: "<<isoUrl;
 
     QProcess wgetProcess;
-    QString cmd = "wget -O /temp/Wow.iso " + isoUrl;
+    QString cmd = "wget -O " + ISO_TARGET_PATH + " " + isoUrl;
     qDebug()<<"Running: "<<cmd;
+    wgetProcess.setProcessChannelMode(QProcess::MergedChannels);
+
     wgetProcess.start(cmd);
+    wgetProcess.waitForStarted();
     wgetProcess.waitForFinished();
     result = wgetProcess.exitStatus() == QProcess::NormalExit && wgetProcess.exitCode() == 0;
     QString resultStr = QString::number(result);
     qDebug()<<"Result: "<<resultStr;
-    qDebug()<<"ErrorStr: "<<wgetProcess.errorString();
+
+    if (!result)
+    {
+        qDebug()<<"STDOut: "<<wgetProcess.readAllStandardOutput();
+        qDebug()<<"ERROut: "<<wgetProcess.readAllStandardError();
+        qDebug()<<"ErrorStr: "<<wgetProcess.errorString();
+        qDebug()<<"Error: "<<wgetProcess.error();
+    }
+
     wgetProcess.close();
 
     return result;
@@ -92,5 +105,5 @@ bool MainWindow::DownloadIso(QUrl url){
 
 void MainWindow::on_pushButton_clicked()
 {
-    ui->webView->load(QUrl("http://localhost/Iso/14262.1000.160206-1700.RS1_RELEASE_IOTCoreRPi_armFRE.ISO"));
+    ui->webView->load(QUrl("http://herricks-dev2/Iso/14262.1000.160206-1700.RS1_RELEASE_IOTCoreRPi_armFRE.ISO"));
 }
