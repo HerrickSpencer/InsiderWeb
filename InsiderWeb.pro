@@ -4,10 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui webkitwidgets
-QT += network
+QT       += core gui network webkitwidgets
 QT += webkit
-
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = InsiderWeb
@@ -15,8 +13,21 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    utils.cpp \
+    buildtypedialog.cpp \
+    insiderwebdialog.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    utils.h \
+    buildtypedialog.h \
+    insiderwebdialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    buildtypedialog.ui \
+    insiderwebdialog.ui
+
+QMAKE_CXXFLAGS += -std=c++11
+
+RESOURCES += \
+    resources.qrc
