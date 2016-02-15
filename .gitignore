@@ -1,0 +1,6 @@
+InsiderWeb
+*.user
+*.user.*
+Makefile
+moc_*
+ui_*
