@@ -1,6 +1,7 @@
 #include "insiderwebdialog.h"
 #include "ui_insiderwebdialog.h"
 #include <QRegExp>
+#include <QDebug>
 
 InsiderWebDialog::InsiderWebDialog(QWidget *parent, QString &urlToDownload, const QString startPage) :
     QDialog(parent),

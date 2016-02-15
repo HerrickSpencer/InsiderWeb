@@ -4,3 +4,4 @@ InsiderWeb
 Makefile
 moc_*
 ui_*
+qrc_*.cpp

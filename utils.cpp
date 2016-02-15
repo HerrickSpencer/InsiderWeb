@@ -4,7 +4,7 @@
 #include <QRegExp>
 #include <QDebug>
 
-static const QString DEVICE_PROP_FILE = "/Temp/PropFile.txt";
+static const QString DEVICE_PROP_FILE = "./TestFiles/PropFile.txt";
 
 int Utils::GetPiVersion()
 {
