@@ -43,7 +43,8 @@ int main(int argc, char *argv[])
     else
     {
         // if Insider Go directly to the insider web choice
-        InsiderWebDialog* pInsiderWebDialog = new InsiderWebDialog(0, urlToDl, "http://auth.windowsondevices.com");
+        QString startPage = "https://auth.windowsondevices.com";
+        InsiderWebDialog* pInsiderWebDialog = new InsiderWebDialog(0, urlToDl, startPage);
         int dialogResult = pInsiderWebDialog->exec();
 
         if (!dialogResult)
