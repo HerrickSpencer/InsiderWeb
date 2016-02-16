@@ -25,9 +25,13 @@ public slots:
     void UnsupportedContentRequested(QNetworkReply *reply);
     void DownloadRequested(const QNetworkRequest &request);
     void sslErrorHandler(QNetworkReply* qnr, const QList<QSslError> & errlist);
+    void UrlChanged();
+private slots:
+    void SetDownloadIso(const QUrl &url);
+
 private:
     Ui::InsiderWebDialog *ui;
     QString* m_urlToDownload;
-    bool isIsoUrl(QUrl url);
+    bool isIsoUrl(const QUrl &url);
 };
 

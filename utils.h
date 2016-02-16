@@ -4,7 +4,7 @@
 class Utils
 {
 public:
-    static int GetPiVersion();
+    static int GetPiVersion(const QString &propFilePath);
     static void SendMessage(const QString &msg);
     static QString GetRtmUrl();
 private:

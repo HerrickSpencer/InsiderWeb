@@ -4,6 +4,7 @@
 #include <QNetworkReply>
 #include <QRegExp>
 #include <QDebug>
+#include <QMessageBox>
 
 InsiderWebDialog::InsiderWebDialog(QWidget *parent, QString &urlToDownload, const QString startPage) :
     QDialog(parent),
@@ -13,6 +14,7 @@ InsiderWebDialog::InsiderWebDialog(QWidget *parent, QString &urlToDownload, cons
     ui->setupUi(this);
     this->setWindowFlags(this->windowFlags() ^ Qt::WindowContextHelpButtonHint);
 
+    ui->webView->page()->setForwardUnsupportedContent(true);
     connect(ui->webView->page(),SIGNAL(downloadRequested(QNetworkRequest)),this,SLOT(DownloadRequested(QNetworkRequest)));
     connect(ui->webView->page(),SIGNAL(unsupportedContent(QNetworkReply*)),this,SLOT(UnsupportedContentRequested(QNetworkReply*)));
 
@@ -23,6 +25,9 @@ InsiderWebDialog::InsiderWebDialog(QWidget *parent, QString &urlToDownload, cons
 
     ui->webView->load(QUrl(startPage));
     qDebug()<< "loading:" << startPage;
+#ifdef QT_DEBUG
+   // connect( ui->webView, SIGNAL(urlChanged(QUrl)), this, SLOT(UrlChanged()));
+#endif
 }
 
 InsiderWebDialog::~InsiderWebDialog()
@@ -34,16 +39,7 @@ void InsiderWebDialog::DownloadRequested(const QNetworkRequest &request){
     qDebug()<<"Download Requested: "<<request.url();
     if (isIsoUrl(request.url()))
     {
-        /*
-        if(DownloadIso(request.url()))
-        {
-            qDebug()<<"Successfull Download";
-        }
-        else
-        {
-            qDebug()<<"Download Failed";
-        }
-        */
+        SetDownloadIso(request.url());
     }
 }
 
@@ -51,20 +47,11 @@ void InsiderWebDialog::UnsupportedContentRequested(QNetworkReply * reply){
     qDebug()<<"Unsupported Content: "<<reply->url();
     if (isIsoUrl(reply->url()))
     {
-        //*m_urlToDownload = (FIX reply->url using same method as mainwindow->download()
-        /*        if (DownloadIso(reply->url()))
-        {
-            qDebug()<<"Successfull Download";
-        }
-        else
-        {
-            qDebug()<<"Download Failed";
-        }
-        */
+        SetDownloadIso(reply->url());
     }
 }
 
-bool InsiderWebDialog::isIsoUrl(QUrl url)
+bool InsiderWebDialog::isIsoUrl(const QUrl &url)
 {
     QString urlStr = url.toString();
     if (urlStr.contains(".iso", Qt::CaseInsensitive))
@@ -78,15 +65,24 @@ void InsiderWebDialog::sslErrorHandler(QNetworkReply* qnr, const QList<QSslError
 {
 
     qDebug() << "---frmBuyIt::sslErrorHandler: ";
-    auto err = errlist.begin();
-
-    while (err != errlist.end())
-    {       
-//        qDebug() << "ssl error: " << err;
-    }
+/*
     // show list of all ssl errors
-    //foreach (QSslError err, errlist)
-    //qDebug() << "ssl error: " << err;
-
+    foreach (QSslError err, errlist)
+    qDebug() << "ssl error: " << err;
+*/
     qnr->ignoreSslErrors();
+}
+
+void InsiderWebDialog::SetDownloadIso(const QUrl &url){
+    QString isoUrl = url.toString();
+    isoUrl.remove(QRegExp("QUrl(\""));
+    isoUrl.remove(QRegExp("\")"));
+    qDebug()<<"To download: "<<isoUrl;
+    *m_urlToDownload = isoUrl;
+    this->accept(); //close window with 'ok'
+}
+
+void InsiderWebDialog::UrlChanged()
+{
+    QMessageBox::critical(this,"URL Change", tr("url changed to %1").arg(ui->webView->url().toString()));
 }

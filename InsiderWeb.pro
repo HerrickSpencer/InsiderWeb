@@ -13,17 +13,16 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
     utils.cpp \
     buildtypedialog.cpp \
     insiderwebdialog.cpp
 
-HEADERS  += mainwindow.h \
+HEADERS  += \
     utils.h \
     buildtypedialog.h \
     insiderwebdialog.h
 
-FORMS    += mainwindow.ui \
+FORMS    += \
     buildtypedialog.ui \
     insiderwebdialog.ui
 

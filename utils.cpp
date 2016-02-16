@@ -4,26 +4,24 @@
 #include <QRegExp>
 #include <QDebug>
 
-static const QString DEVICE_PROP_FILE = "./TestFiles/PropFile.txt";
-
-int Utils::GetPiVersion()
+int Utils::GetPiVersion(const QString &propFilePath)
 {
     int version = 0;
 
     // open devices proc file
-    QFile res_file(DEVICE_PROP_FILE);
-    if (!res_file.exists())
+    QFile propFile(propFilePath);
+    if (!propFile.exists())
     {
-        SendMessage("Internal resource path missing " + DEVICE_PROP_FILE);
+        SendMessage("Device Property file missing " + propFilePath);
         return 0;
     }
-    if (!res_file.open(QFile::ReadOnly | QFile::Text))
+    if (!propFile.open(QFile::ReadOnly | QFile::Text))
     {
-        SendMessage("Could not open resource " + DEVICE_PROP_FILE);
+        SendMessage("Could not open device property file " + propFilePath);
         return 0;
     }
-    QString deviceDesc = res_file.readAll();
-    res_file.close();
+    QString deviceDesc = propFile.readAll();
+    propFile.close();
 
     // Extract Pi ver from text
     QRegExp regEx("Pi (\\d+)");
@@ -46,7 +44,7 @@ int Utils::GetPiVersion()
 
     if (!version)
     {
-        SendMessage("Version not found from " + DEVICE_PROP_FILE);
+        SendMessage("Version not found from " + propFilePath);
     }
     return version;
 }
