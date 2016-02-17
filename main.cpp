@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "buildtypedialog.h"
 #include "insiderwebdialog.h"
+#include <QFile>
 
 QString DEVICE_PROP_FILE;
 QString RTM_DL_URL;
@@ -70,13 +71,24 @@ int main(int argc, char *argv[])
 
     // do download with urlToDl
     Utils::SendMessage(QString("Set download to %1").arg(urlToDl));
+    // for now will write the path to a file for the bash script to run wget
+    QFile isoDestFile(ISO_DEST_PATH);
+    if (!isoDestFile.exists())
+        Utils::SendMessage(QString("Overwriting %1").arg(ISO_DEST_PATH));
+    int lengthToWrite = urlToDl.length();
+    if (!isoDestFile.open(QFile::WriteOnly|QFile::Text))
+    {
+        Utils::SendMessage(QString("Failed to write dl %1 to %2").arg(urlToDl).arg(ISO_DEST_PATH));
+        return 1;
+    }
 
+    auto bytesWritten = isoDestFile.write(qPrintable(urlToDl));
+    isoDestFile.close();
+    if (bytesWritten != lengthToWrite)
+    {
+        Utils::SendMessage(QString("ISOURL Writing failed"));
+        return 1;
+    }
 
     return piVer;
-
-    /*MainWindow w;
-    w.show();
-
-    return a.exec();
-                    */
 }

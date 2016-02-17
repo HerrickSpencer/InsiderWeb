@@ -13,6 +13,7 @@ InsiderWebDialog::InsiderWebDialog(QWidget *parent, QString &urlToDownload, cons
 {
     ui->setupUi(this);
     this->setWindowFlags(this->windowFlags() ^ Qt::WindowContextHelpButtonHint);
+    this->showFullScreen();
 
     ui->webView->page()->setForwardUnsupportedContent(true);
     connect(ui->webView->page(),SIGNAL(downloadRequested(QNetworkRequest)),this,SLOT(DownloadRequested(QNetworkRequest)));
